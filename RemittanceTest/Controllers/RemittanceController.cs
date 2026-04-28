@@ -18,9 +18,20 @@ namespace RemittanceTest.Controllers
         public IActionResult Cancel(int id)
         {
             // TODO: 2. 呼叫 Service 執行取消邏輯
-            // TODO: 3. 根據 Service 回傳的結果，回傳相對應的 HTTP 狀態碼 (Ok / BadRequest / NotFound)
+            var (isSuccess, message) = _remittanceService.CancelRemittance(id);
 
-            return Ok();
+            // TODO: 3. 根據 Service 回傳的結果，回傳相對應的 HTTP 狀態碼 (Ok / BadRequest / NotFound)
+            if (isSuccess)
+            {
+                return Ok(message);
+            }
+            
+            if (message == "資料不存在")
+            {
+                return NotFound(message);
+            }
+
+            return BadRequest(message);
         }
     }
 }
