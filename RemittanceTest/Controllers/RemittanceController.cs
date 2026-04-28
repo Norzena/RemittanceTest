@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RemittanceTest.Models;
+using RemittanceTest.Services;
 
 namespace RemittanceTest.Controllers
 {
@@ -8,6 +9,10 @@ namespace RemittanceTest.Controllers
     public class RemittanceController : ControllerBase
     {
         // TODO: 1. 請透過建構子注入 (Constructor Injection) 引入 IRemittanceService
+        private readonly IRemittanceService _remittanceService;
+        public RemittanceController(IRemittanceService remittanceService) {
+            _remittanceService = remittanceService;
+        }
 
         [HttpPost("{id}/cancel")]
         public IActionResult Cancel(int id)
