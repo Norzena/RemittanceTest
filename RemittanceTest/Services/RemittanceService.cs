@@ -18,8 +18,26 @@ namespace RemittanceTest.Services
         public (bool IsSuccess, string Message) CancelRemittance(int id)
         {
             // TODO: 請在此處實作「取消」的商業邏輯與防併發檢核
+            try
+            {
+                var item = _db.FirstOrDefault(x => x.Id == id);
 
-            throw new NotImplementedException();
+                if (item == null)
+                {
+                    return (false, "資料不存在");
+                }
+
+                if (item.Status == 0)
+                {
+                    return (false, "只有狀態為待覆核的資料才可以被取消");
+                }
+
+                item.Status = 9;
+                return (true, "取消成功");
+            }
+            catch (Exception) { 
+                return (false, "系統錯誤");
+            }
         }
     }
 }
