@@ -24,7 +24,22 @@
 5. **架構問答 (請直接回答於下方)**
    - 雖然本測試使用 In-Memory List 模擬資料庫，但在正式的 SQL Server 環境中，您會如何撰寫 T-SQL 或 Entity Framework Core 程式碼，來確保「多個使用者同時對同一筆資料按下取消」時，不會發生 Race Condition？
    - **您的回答：** (請在此作答...)
+     1. T-SQL 
+        `WHERE` 確保只有符合條件的資料才能被更新。多個使用者同時對同一筆資料按下取消時，
+        第一個使用者執行後， Status 會改為 9，其他使用者再執行時，就會因條件不成立 (Status != 0) 而不會更新資料。
 
+        UPDATE Remittances
+        SET Status = 9
+        WHERE Id = @Id AND Status = 0;
+         
+     2. Entity Framework Core
+        `Timestamp` 檢查資料是否被修改，EF Core 在更新資料時會將 Version 加入 WHERE 進行比對。
+        如果資料已被其他使用者修改，會拋出例外，而不會更新資料。
+        
+        [Timestamp]
+        public byte[] Version { get; set; }
+
+     
 ## 提交要求
 1. 請使用 GitHub Public Repository 提交。
 2. **請務必多次 Commit**（例如：API完成、前端完成、Bug修復），讓我們了解您的開發思路。
