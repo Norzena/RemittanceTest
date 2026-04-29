@@ -27,7 +27,7 @@ namespace RemittanceTest.Services
                     return (false, "資料不存在");
                 }
 
-                if (item.Status == 0)
+                if (item.Status != 0)
                 {
                     return (false, "只有狀態為待覆核的資料才可以被取消");
                 }
