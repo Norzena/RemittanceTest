@@ -41,9 +41,33 @@
 
                 // TODO: 請實作此函數
                 const cancelItem = async (id) => {
-                    // 1. 呼叫 POST API
-                    // 2. 處理成功與失敗的回應
-                    // 3. 成功後更新 remittances 中的狀態
+                    try {
+                        // 1. 呼叫 POST API
+                        var response = await fetch(`/api/remittance/${id}/cancel`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        const result = await response.json();
+
+                        // 2. 處理成功與失敗的回應
+                        if (response.ok && result.isSuccess) {
+                            // 3. 成功後更新 remittances 中的狀態
+                            const item = remittances.value.find(x => x.id === id);
+                            if (item) {
+                                item.status = 9;
+                            }
+
+                            alert(result.message || '取消成功');
+
+                        } else {
+                            alert(result.message || '取消失敗');
+                        }
+                    } catch (error){
+                        alert('系統錯誤');
+                    }
                 };
 
                 return { remittances, getStatusText, cancelItem };
